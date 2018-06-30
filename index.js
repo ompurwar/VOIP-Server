@@ -26,7 +26,7 @@ server.on('listening', () => {
     console.log(`server listening ${address.address}:${address.port}`);
 });
 
-server.bind(41234, 'localhost');
+server.bind(41234, process.env.address);
 
 //server.bind(41234, '192.168.43.179');
 // server listening 0.0.0.0:41234

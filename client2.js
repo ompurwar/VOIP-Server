@@ -5,7 +5,7 @@ const message = Buffer.from('Some bytes');
 
 
 const client = dgram.createSocket('udp4');
-client.send("lskdjlfkjslekjlwjerijwijeirwsl;ke;kwlerkl;wkerlewkelrkwerlwkerl;kw;lkelkl;rk;wk;lekr;woperowkerk;owkoerwkel;kr;wkel;krl;ewklrl;wekr;lkwerkekrlkw;lkel;wkrl;k", 41234, '192.168.43.179', (err) => {
+client.send("lskdjlfkjslekjlwjerijwijeirwsl;ke;kwlerkl;wkerlewkelrkwerlwkerl;kw;lkelkl;rk;wk;lekr;woperowkerk;owkoerwkel;kr;wkel;krl;ewklrl;wekr;lkwerkekrlkw;lkel;wkrl;k", 8080, '10.130.30.105', (err) => {
 
     console.log("data sent ");
 

@@ -11,5 +11,8 @@
         "smartDoorbell"
     ],
     "author": "Om Purwar",
-    "license": "ISC"
+    "license": "ISC",
+    "dependencies": {
+        "speaker": "^0.4.1"
+    }
 }

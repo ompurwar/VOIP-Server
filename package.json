@@ -2,7 +2,7 @@
     "name": "doorbellbackend",
     "version": "1.0.0",
     "description": "Backent for door bell",
-    "main": "index.js",
+    "main": "voipClient1.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node index.js"
@@ -13,6 +13,19 @@
     "author": "Om Purwar",
     "license": "ISC",
     "dependencies": {
+        "body-parser": "^1.18.3",
+        "express": "^4.16.3",
+        "mosca": "^2.8.2",
+        "mqtt": "^2.18.2",
         "speaker": "^0.4.1"
+    },
+    "devDependencies": {
+        "eslint": "^5.1.0",
+        "eslint-config-google": "^0.9.1",
+        "eslint-config-standard": "^11.0.0",
+        "eslint-plugin-import": "^2.13.0",
+        "eslint-plugin-node": "^6.0.1",
+        "eslint-plugin-promise": "^3.8.0",
+        "eslint-plugin-standard": "^3.1.0"
     }
 }

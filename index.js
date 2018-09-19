@@ -39,6 +39,6 @@ var server = app.listen(8080, function () {
 // Json validator middle-ware
 
 app.post('/', function (req, res) {
-    console.log(JSON.stringify(req.body));
+    console.log(req.body);
     res.send(200);
 });

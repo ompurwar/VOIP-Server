@@ -6,7 +6,7 @@ var fs = require('fs')
 var Readable = require('stream').Duplex
 var bufferAlloc = require('buffer-alloc')
 var Speaker = require('speaker')
-var Chalk = require('./chalk.js')
+var Chalk = require('./chalk')
 var myChalk = new Chalk()
 const EventEmitter = require('events')
 class MyEmitter extends EventEmitter {}
@@ -54,7 +54,7 @@ function address(ip, port) {
   this.ip = ip
   this.port = port
 };
-var stunServer = new address('192.168.43.179', 41234)
+var stunServer = new address('206.189.131.144', 3000)
 var myAddress = new address(null, null)
 var peerAddress = new address(null, null)
 var gotPeer = false
@@ -176,7 +176,7 @@ function initiateCall() {
 
 muLawDecodeTransform.pipe(mySpeaker)
 // calling the stun server to get myown public address [ip, port]
-UDPclient.send('hello', stunServer.port, stunServer.ip, (err) => {
+UDPclient.send('hello', 3000, '206.189.131.144', (err) => {
   if (err) {
     throw err
   }

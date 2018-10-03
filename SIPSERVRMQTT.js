@@ -1,5 +1,8 @@
 'use strict';
+// https://devpost.com/software/mosca
 var mosca = require('mosca');
+var http = require('http'),
+    httpServer = http.createServer()
 
 var ascoltatore = {
     //using ascoltatore
@@ -24,13 +27,13 @@ var MQTTserver = new mosca.Server(moscaSettings);
 
 
 
-MQTTserver.on('clientConnected', function(client) {
+MQTTserver.on('clientConnected', function (client) {
     console.log('[client connected]', client.id);
 });
 
 // fired when a message is received
-MQTTserver.on('published', function(packet, client) {
-    console.log('[Published]', packet.topic, String(packet.payload), packet.retain);
+MQTTserver.on('published', function (packet, client) {
+    console.log('[Published]', packet.topic, packet.retain);
 });
 
 MQTTserver.on('ready', setup);
@@ -40,3 +43,7 @@ function setup() {
     console.log('[ready] Mosca server is up and running');
 
 }
+
+MQTTserver.attachHttpServer(httpServer);
+
+httpServer.listen(1800);

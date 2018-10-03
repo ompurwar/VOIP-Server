@@ -15,8 +15,10 @@
     "dependencies": {
         "body-parser": "^1.18.3",
         "express": "^4.16.3",
-        "mosca": "^2.8.2",
-        "mqtt": "^2.18.2"
+        "mosca": "^2.8.3",
+        "mqtt": "^2.18.2",
+        "speaker": "^0.4.1",
+        "wav": "^1.0.2"
     },
     "devDependencies": {
         "eslint": "^5.1.0",

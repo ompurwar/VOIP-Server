@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script>
+        var connected = false;
+        // Create a client instance
+        var client = mqtt.connect('mqtt://206.189.131.144:1800');
+        // var client = mqtt.connect('mqtt://localhost:1800')
+
+        client.on('connect', function() {
+            console.log("connected");
+            client.subscribe('jkhaiwue8r23u923y9r9wuf89y93wyr89aur/client1', function(err) {
+                if (!err) {
+                    console.log("subscribed");
+
+                }
+            })
+        });
+        var AudioContext = window.AudioContext || window.webkitAudioContext;
+
+        var audioCtx = new AudioContext({
+            latencyHint: 'interactive',
+            sampleRate: 8000,
+        });
+        var myArrayBuffer = audioCtx.createBuffer(2, 1024, 8000);
+
+        // Get an AudioBufferSourceNode.
+        // This is the AudioNode to use when we want to play an AudioBuffer
+        var source = audioCtx.createBufferSource();
+        client.on('message', function(topic, message) {
+            // message is Buffer
+            console.log(message.length);
+            var uint8buffer = new Uint8Array(message).buffer;
+            var uint32array = new Int32Array(uint8buffer);
+            var float32array = Float32Array.from(uint32array, X => X / 2147483648);
+
+            // Fill the buffer with white noise;
+            // just random values between -1.0 and 1.0
+            for (var channel = 0; channel < myArrayBuffer.numberOfChannels; channel++) {
+                // This gives us the actual array that contains the data
+                var nowBuffering = myArrayBuffer.getChannelData(channel);
+
+                // Math.random() is in [0; 1.0]
+                // audio needs to be in [-1.0; 1.0]
+                float32array.forEach((el, index) => {
+                    nowBuffering[index] = el;
+                });
+                ///console.log(nowBuffering.valueOf());
+
+            }
+
+
+            if (!connected) {
+
+                // set the buffer in the AudioBufferSourceNode
+                source.buffer = myArrayBuffer;
+                // connect the AudioBufferSourceNode to the
+                // destination so we can hear the sound
+                
+
+                // start the source playing
+                source.start();
+                console.log('audio pipeline connected');
+                connected = true;
+            }
+
+            source.connect(audioCtx.destination);
+
+        })
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+    <center>
+        <h1>MQTT</h1>
+    </center>
+
+
+</body>
+
+</html>

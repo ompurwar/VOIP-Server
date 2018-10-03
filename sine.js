@@ -52,7 +52,7 @@ function read(n) {
         }
     }
 
-    console.log(buf.toString('base64'))
+    console.log(buf.length)
     this.push(buf)
 
     this.samplesGenerated += numSamples

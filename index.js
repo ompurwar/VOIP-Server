@@ -31,14 +31,13 @@ app.use(function (req, res, next) {
 
 
 
-
 // setting up the server
-var server = app.listen(8080, function () {
+var server = app.listen(80, function () {
     console.log('listening to the port\t:' + server.address().port);
 });
 // Json validator middle-ware
 
-app.post('/', function (req, res) {
+app.get('/', function (req, res) {
     console.log(req.body);
-    res.send(200);
+    res.sendFile(__dirname+'/index.html');
 });

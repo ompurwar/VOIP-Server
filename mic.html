@@ -1,0 +1,170 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>capture microphone then show time & frequency domain output</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+
+
+
+</head>
+
+<body>
+
+    <p>Volume</p>
+    <input id="volume" type="range" min="0" max="1" step="0.1" value="0.0" />
+
+    <section class="main-controls">
+        <canvas class="visualizer" height="60px" width="611"></canvas>
+        <div id="buttons">
+            <button class="record">Record</button>
+            <button class="stop" disabled="">Stop</button>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+        var client = mqtt.connect('wss://206.189.131.144:2000');
+        client.on('connect', function() {
+            console.log("connected");
+            client.subscribe('/new/user/', function(err) {
+                if (!err) {
+                    console.log("subscribed");
+                }
+            })
+
+
+
+        });
+        var audioCtx = new(window.AudioContext || webkitAudioContext)();
+        var source = null;
+        var analyser = audioCtx.createAnalyser();;
+        var bufferLength = null;
+        var dataArray = null;
+        var audioFloatData = null;
+        var scriptProcessor = audioCtx.createScriptProcessor(1024, 1, 1);
+        var destination = audioCtx.createMediaStreamDestination();
+
+        var canvas = document.querySelector('.visualizer');
+        var mainSection = document.querySelector('.main-controls');
+
+        // disable stop button while not recording
+
+        stop.disabled = true;
+
+        // visualiser setup - create web audio api context and canvas
+
+
+        var canvasCtx = canvas.getContext("2d");
+
+        //main block for doing the audio recording
+
+        if (navigator.mediaDevices.getUserMedia) {
+            console.log('getUserMedia supported.');
+
+            var constraints = {
+                audio: true
+            };
+
+            var onSuccess = function(stream) {
+                //var mediaRecorder = new MediaRecorder(stream);
+
+                visualize(stream);
+
+            }
+
+            var onError = function(err) {
+                console.log('The following error occured: ' + err);
+            }
+
+            navigator.mediaDevices.getUserMedia(constraints).then(onSuccess, onError);
+
+        } else {
+            console.log('getUserMedia not supported on your browser!');
+        }
+
+        function visualize(stream) {
+            source = audioCtx.createMediaStreamSource(stream);
+
+            analyser.fftSize = 2048;
+            bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            audioFloatData = new Float32Array(bufferLength);
+            analyser.connect(scriptProcessor);
+
+            source.connect(analyser);
+            //analyser.connect(audioCtx.destination);
+
+            // draw()
+
+            function draw() {
+                WIDTH = canvas.width
+                HEIGHT = canvas.height;
+
+                requestAnimationFrame(draw);
+
+                analyser.getByteTimeDomainData(dataArray);
+
+                canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+                canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
+
+                canvasCtx.lineWidth = 2;
+                canvasCtx.strokeStyle = 'rgb(0, 0, 0)';
+
+                canvasCtx.beginPath();
+
+                var sliceWidth = WIDTH * 1.0 / bufferLength;
+                var x = 0;
+
+
+                for (var i = 0; i < bufferLength; i++) {
+
+                    var v = dataArray[i] / 128.0;
+                    var y = v * HEIGHT / 2;
+
+                    if (i === 0) {
+                        canvasCtx.moveTo(x, y);
+                    } else {
+                        canvasCtx.lineTo(x, y);
+                    }
+
+                    x += sliceWidth;
+                }
+
+                canvasCtx.lineTo(canvas.width, canvas.height / 2);
+                canvasCtx.stroke();
+
+            }
+        }
+        scriptProcessor.onaudioprocess = function(audioProcessingEvent) {
+            sendData(audioProcessingEvent.inputBuffer.getChannelData(0));
+        }
+        scriptProcessor.connect(destination);
+        var seq = 0;
+
+        function sendData(data) {
+           
+                client.publish("jkhaiwue8r23u923y9r9wuf89y93wyr89aur/client2", new Uint8Array(data.buffer), {
+                    qos: 1
+                }, () => {
+                    console.log("data published");
+                });
+            
+
+
+
+            // client.publish("jkhaiwue8r23u923y9r9wuf89y93wyr89aur/client2",JSON.stringify({seq:seq++,data: data,timmestamp:Date.now()}), {
+            //     qos: 1
+            // }, () => {
+            //     console.log("data published");
+            // });
+
+        }
+        window.onresize = function() {
+            canvas.width = mainSection.offsetWidth;
+        }
+
+        window.onresize();
+    </script>
+</body>
+
+</html>

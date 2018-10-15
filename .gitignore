@@ -174,3 +174,8 @@ $RECYCLE.BIN/
 
 # next.js build output
 .next
+ssl/server.cert
+ssl/server.key
+test.wav
+recorder/ChromeSetup.exe
+test.wav

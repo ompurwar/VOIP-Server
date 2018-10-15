@@ -1,8 +1,23 @@
 'use strict';
 // https://devpost.com/software/mosca
 var mosca = require('mosca');
-var http = require('http'),
-    httpServer = http.createServer()
+var fs = require('fs');
+var Chalk = require('./chalk');
+var http = require('http');
+var https = require('https');
+var privateKey = fs.readFileSync('ssl/server.key', 'utf8');
+var certificate = fs.readFileSync('ssl/server.cert', 'utf8');
+
+// setting credentials object
+var credentials = {
+    key: privateKey,
+    cert: certificate
+};
+// creating chalk instance
+var myChalk = new Chalk();
+
+var httpServer = http.createServer();
+var httpsServer = https.createServer(credentials);
 
 var ascoltatore = {
     //using ascoltatore
@@ -32,18 +47,20 @@ MQTTserver.on('clientConnected', function (client) {
 });
 
 // fired when a message is received
+
 MQTTserver.on('published', function (packet, client) {
-    console.log('[Published]', packet.topic, packet.retain);
-});
+    console.log(myChalk.info('[Published]' + packet.topic + 'Packet len = ' + packet.length));
+})
 
 MQTTserver.on('ready', setup);
 
 // fired when the mqtt server is ready
 function setup() {
     console.log('[ready] Mosca server is up and running');
-
+    
 }
 
 MQTTserver.attachHttpServer(httpServer);
-
+MQTTserver.attachHttpServer(httpsServer);
 httpServer.listen(1800);
+httpsServer.listen(2000);

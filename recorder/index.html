@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- saved from url=(0037)https://mdn.github.io/web-dictaphone/ -->
+<html lang="en-us" class="gr__mdn_github_io"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width">
+    <title>Web dictaphone</title>
+    <link href="./Web dictaphone_files/app.css" rel="stylesheet" type="text/css">
+    <link href="./Web dictaphone_files/install-button.css" rel="stylesheet" type="text/css">
+  </head>
+  <body data-gr-c-s-loaded="true">
+
+    <div class="wrapper">
+
+      <header>
+        <h1>Web dictaphone</h1>
+      </header>
+
+      <section class="main-controls">
+        <canvas class="visualizer" height="60px" width="641"></canvas>
+        <div id="buttons">
+          <button class="record" disabled="" style="background: red;">Record</button>
+          <button class="stop">Stop</button>
+        </div>
+      </section>
+
+      <section class="sound-clips">
+
+
+      </section>
+
+    </div>
+
+    <label for="toggle">❔</label>
+    <input type="checkbox" id="toggle">
+    <aside>
+      <h2>Information</h2>
+
+      <p>Web dictaphone is built using <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator.getUserMedia">getUserMedia</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder_API">MediaRecorder API</a>, which provides an easier way to capture Media streams.</p>
+
+      <p>Icon courtesy of <a href="http://findicons.com/search/microphone">Find Icons</a>. Thanks to <a href="http://soledadpenades.com/">Sole</a> for the Oscilloscope code!</p>
+
+      <button id="install-btn">Install app</button>
+    </aside>
+
+    <script src="./Web dictaphone_files/install.js"></script>
+
+    <script src="./Web dictaphone_files/mediaDevices-getUserMedia-polyfill.js"></script>
+
+    <!-- Below is your custom application script -->
+    <script src="./Web dictaphone_files/app.js"></script>
+
+  
+
+</body></html>

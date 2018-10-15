@@ -1,5 +1,8 @@
 {
     "editor.trimAutoWhitespace": false,
     "eslint.alwaysShowStatus": true,
-    "eslint.options": {"parserOptions.ecmaVersion":6}
+    "eslint.options": {
+        "parserOptions.ecmaVersion": 6
+    },
+    "cSpell.language": "en"
 }

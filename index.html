@@ -1,87 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-    <script>
-        var connected = false;
-        // Create a client instance
-        var client = mqtt.connect('mqtt://206.189.131.144:1800');
-        // var client = mqtt.connect('mqtt://localhost:1800')
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="
+        A Voice Calling App
+      ">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
-        client.on('connect', function() {
-            console.log("connected");
-            client.subscribe('jkhaiwue8r23u923y9r9wuf89y93wyr89aur/client1', function(err) {
-                if (!err) {
-                    console.log("subscribed");
+        <title>JUst Call</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous">
+        <link rel="stylesheet" href="./include/style.css">
+        <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+        <script src="./include/script.js"></script>
+        <script>
 
-                }
-            })
-        });
-        var AudioContext = window.AudioContext || window.webkitAudioContext;
+        </script>
+        <title>Document</title>
+    </head>
 
-        var audioCtx = new AudioContext({
-            latencyHint: 'interactive',
-            sampleRate: 8000,
-        });
-        var myArrayBuffer = audioCtx.createBuffer(2, 1024, 8000);
+    <body>
+        <br>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-9">
+                    <center>
+                        <h1 class="text text-warning">
+                            <strong class="text text-danger">📞</strong>
+                            Just Call
 
-        // Get an AudioBufferSourceNode.
-        // This is the AudioNode to use when we want to play an AudioBuffer
-        var source = audioCtx.createBufferSource();
-        client.on('message', function(topic, message) {
-            // message is Buffer
-            console.log(message.length);
-            var uint8buffer = new Uint8Array(message).buffer;
-            var uint32array = new Int32Array(uint8buffer);
-            var float32array = Float32Array.from(uint32array, X => X / 2147483648);
+                        </h1>
+                    </center>
+                </div>
+                <div class="col-2">
+                    <img src="https://dp-instagram.firebaseapp.com/assets/om-purwar-192x192.png" class="rounded-circle "
+                        height="50px" alt="">
+                    <span id="connectionSt"></span>
 
-            // Fill the buffer with white noise;
-            // just random values between -1.0 and 1.0
-            for (var channel = 0; channel < myArrayBuffer.numberOfChannels; channel++) {
-                // This gives us the actual array that contains the data
-                var nowBuffering = myArrayBuffer.getChannelData(channel);
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="container-fluid" id="main">
 
-                // Math.random() is in [0; 1.0]
-                // audio needs to be in [-1.0; 1.0]
-                float32array.forEach((el, index) => {
-                    nowBuffering[index] = el;
-                });
-                ///console.log(nowBuffering.valueOf());
+            <div class="container">
+                <center>
+                    <strong class="text text-primary" id="myCallAdrs">Contact No.:</strong>
+                    <strong class="text text-success" id="myCallAdrs">8052098738</strong>
+                </center>
+                <center>
+                    <strong class="text text-primary">Connect your Headphones</strong>
+                </center>
+                <br>
+                <input class="form-control">
+            </div>
 
-            }
+        </div>
+        <div class="container" id="createProfile">
+            create profie works!
+        </div>
+        <center>
+            <p class="first">If you click on me, I will disappear.</p>
+            <p>Click me away!</p>
+            <p>Click me too!</p>
+            <canvas id="myCanvas" width="500" height="500" style="border:1px solid #d3d3d3;">
 
+        </center>
 
-            if (!connected) {
+            <!-- Optional JavaScript -->
+            <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                crossorigin="anonymous"></script>
 
-                // set the buffer in the AudioBufferSourceNode
-                source.buffer = myArrayBuffer;
-                // connect the AudioBufferSourceNode to the
-                // destination so we can hear the sound
-                
-
-                // start the source playing
-                source.start();
-                console.log('audio pipeline connected');
-                connected = true;
-            }
-
-            source.connect(audioCtx.destination);
-
-        })
-    </script>
-    <title>Document</title>
-</head>
-
-<body>
-    <center>
-        <h1>MQTT</h1>
-    </center>
-
-
-</body>
+    </body>
 
 </html>

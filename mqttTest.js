@@ -4,6 +4,9 @@ var Speaker = require('speaker');
 var FileWriter = require('wav').FileWriter;
 var Chalk = require('./chalk');
 var myChalk = new Chalk();
+const {
+    Transform
+} = require('stream');
 //var MQTTclient = mqtt.connect('mqtt://206.189.131.144:41235');
 var counter = 0;
 
@@ -12,7 +15,40 @@ var outputFileStream = new FileWriter('./test.wav', {
     channels: 1,
     bitDepth: 32
 });
+// creating speaker instance
+var mySpeaker = new Speaker({
+    channels: 1, // 2 channels
+    bitDepth: 16, // 16-bit samples
+    signed: true,
+    sampleRate: 8000, // 44,100 Hz sample rate
+    samplesPerFrame: 1024
+})
 
+var AmplificationTransform = new Transform({
+
+    /**
+     *
+     *
+     * @param {*} chunk
+     * @param {*} encoding
+     * @param {*} callback
+     */
+    writableObjectMode: true,
+    transform(chunk, encoding, callback) {
+        var temp = chunk
+        var buf = Buffer.allocUnsafe(2048)
+        var index
+
+        for (index = 0; index < chunk.length / 4; ++index) {
+            buf.writeInt16BE(chunk.readInt32BE(index << 2) >> 16, index << 1)
+      
+        }
+
+        this.push(buf)
+        callback()
+    }
+})
+AmplificationTransform.pipe(outputFileStream)
 // creating speaker instance mqtt://iot.eclipse.org
 
 var MQTTclient = mqtt.connect('mqtt://206.189.131.144:41235');
@@ -37,10 +73,14 @@ MQTTclient.on('connect', function () {
     })
 });
 MQTTclient.on('message', function (topic, message) {
+    var uint8buffer = new Uint8Array(message).buffer;
+    var uint32array = new Int32Array(uint8buffer);
+    var float32array = Float32Array.from(uint32array, X => X / 2147483648);
 
     // message is Buffer
     //console.log(myChalk.info(message));
     console.log(myChalk.info(message.length));
+   // AmplificationTransform.write(message)
 
     outputFileStream.write(message);
 
@@ -50,7 +90,10 @@ setInterval(() => {
         seqNo: counter++,
         msg: `jjjjjjjjajsdhkahskdhkashdkhajkshdjhajksdhkjahdsjhasjkhdjkajksdjkahsjdhjkahsdhajkshfjkhdsajkdfhjashdjkhasjkdhjkahsdjkasjksldfjlsdjflkjsdlkfjkljsklfjdkljkjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj`
     }));
-}, 500);
+}, 50000000);
+
+
+
 
 
 // You ask two questions:

@@ -1,0 +1,23 @@
+.online {
+    height: 15px;
+    width: 15px;
+    background-color: #28a796;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    left: 1px;
+    top: -17px;
+    border: 2px solid white;
+}
+
+.offline {
+    height: 15px;
+    width: 15px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    left: 1px;
+    top: -17px;
+    border: 2px solid white
+}
